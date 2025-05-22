@@ -236,7 +236,9 @@ func TestInputFileCompressed(t *testing.T) {
 }
 
 func TestInputFileWatchForNewFiles(t *testing.T) {
-	rnd := rand.Int63()
+	// Create a properly seeded random source
+	source := rand.NewSource(time.Now().UnixNano())
+	rnd := rand.New(source).Int63()
 	basePath := fmt.Sprintf("/tmp/%d", rnd)
 
 	// Create first file
