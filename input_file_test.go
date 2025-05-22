@@ -5,7 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"math/rand"
+	cryptoRand "crypto/rand"
+	"math/big"
 	"os"
 	"sync"
 	"testing"
@@ -88,7 +89,12 @@ func TestInputFileWithGETAndPOST(t *testing.T) {
 }
 
 func TestInputFileMultipleFilesWithRequestsOnly(t *testing.T) {
-	rnd := rand.Int63()
+	// Use crypto/rand instead of math/rand for secure random number generation
+	randomBigInt, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(1<<62))
+	if err != nil {
+		t.Fatalf("Failed to generate secure random number: %v", err)
+	}
+	rnd := randomBigInt.Int64()
 
 	file1, _ := os.OpenFile(fmt.Sprintf("/tmp/%d_0", rnd), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0660)
 	file1.Write([]byte("1 1 1\ntest1"))
@@ -118,7 +124,12 @@ func TestInputFileMultipleFilesWithRequestsOnly(t *testing.T) {
 }
 
 func TestInputFileRequestsWithLatency(t *testing.T) {
-	rnd := rand.Int63()
+	// Use crypto/rand instead of math/rand for secure random number generation
+	randomBigInt, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(1<<62))
+	if err != nil {
+		t.Fatalf("Failed to generate secure random number: %v", err)
+	}
+	rnd := randomBigInt.Int64()
 
 	file, _ := os.OpenFile(fmt.Sprintf("/tmp/%d", rnd), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0660)
 	defer file.Close()
@@ -146,7 +157,12 @@ func TestInputFileRequestsWithLatency(t *testing.T) {
 }
 
 func TestInputFileMultipleFilesWithRequestsAndResponses(t *testing.T) {
-	rnd := rand.Int63()
+	// Use crypto/rand instead of math/rand for secure random number generation
+	randomBigInt, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(1<<62))
+	if err != nil {
+		t.Fatalf("Failed to generate secure random number: %v", err)
+	}
+	rnd := randomBigInt.Int64()
 
 	file1, _ := os.OpenFile(fmt.Sprintf("/tmp/%d_0", rnd), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0660)
 	file1.Write([]byte("1 1 1\nrequest1"))
@@ -189,7 +205,12 @@ func TestInputFileMultipleFilesWithRequestsAndResponses(t *testing.T) {
 }
 
 func TestInputFileLoop(t *testing.T) {
-	rnd := rand.Int63()
+	// Use crypto/rand instead of math/rand for secure random number generation
+	randomBigInt, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(1<<62))
+	if err != nil {
+		t.Fatalf("Failed to generate secure random number: %v", err)
+	}
+	rnd := randomBigInt.Int64()
 
 	file, _ := os.OpenFile(fmt.Sprintf("/tmp/%d", rnd), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0660)
 	file.Write([]byte("1 1 1\ntest1"))
@@ -210,7 +231,12 @@ func TestInputFileLoop(t *testing.T) {
 }
 
 func TestInputFileCompressed(t *testing.T) {
-	rnd := rand.Int63()
+	// Use crypto/rand instead of math/rand for secure random number generation
+	randomBigInt, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(1<<62))
+	if err != nil {
+		t.Fatalf("Failed to generate secure random number: %v", err)
+	}
+	rnd := randomBigInt.Int64()
 
 	output := NewFileOutput(fmt.Sprintf("/tmp/%d_0.gz", rnd), &FileOutputConfig{FlushInterval: time.Minute, Append: true})
 	for i := 0; i < 1000; i++ {
@@ -236,9 +262,12 @@ func TestInputFileCompressed(t *testing.T) {
 }
 
 func TestInputFileWatchForNewFiles(t *testing.T) {
-	// Create a properly seeded random source
-	source := rand.NewSource(time.Now().UnixNano())
-	rnd := rand.New(source).Int63()
+	// Use crypto/rand instead of math/rand for secure random number generation
+	randomBigInt, err := cryptoRand.Int(cryptoRand.Reader, big.NewInt(1<<62))
+	if err != nil {
+		t.Fatalf("Failed to generate secure random number: %v", err)
+	}
+	rnd := randomBigInt.Int64()
 	basePath := fmt.Sprintf("/tmp/%d", rnd)
 
 	// Create first file
